@@ -1,0 +1,72 @@
+import pygame
+import math
+from pygame import mixer
+
+
+
+mixer.init()
+
+
+pygame.init()
+pygame.display.set_caption("may final")
+screen = pygame.display.set_mode((1000,1000))
+clock = pygame.time.Clock()
+gameover = False
+
+
+
+class Key:
+    def __init__(self,x,y,color1, color2,key):
+        self.x = x
+        self.y = y
+        self.color1 = color1
+        self.color2 = color2
+        self.key = key
+        self.rect = pygame.Rect(self.x, self.y,50,20)
+    def load(map): 
+        rects = []
+        mixer.music.load(map +".mp3")
+        mixer.music.play()
+    
+        
+
+        f=open(map +'.txt',"r")
+        data = f.readlines()
+
+        for y in range(len(data)):
+            for x in range(len(data[y])):
+                if data[y][x] == '0':
+                    if x == 0:
+                        rects.append(pygame.Rect((keys[x].rect.centerx,0,50,50)))
+        return rects
+    map_rect = load("map.txt")
+    map = str(map)
+
+keys =[
+    Key(100,100,(255,0,0),(220,0,0), pygame.K_a),
+    Key(200,100,(0,255,0),(0,220,0),pygame.K_s),
+    Key(300,100,(0,0,255),(100,100,220),pygame.K_d),
+    Key(400,100,(255,255,0),(200,200,200),pygame.K_f)
+]
+
+while not gameover:
+    clock.tick(60)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            gameover = True
+
+    for key in keys:
+        pygame.draw.rect(screen,key.color1,key.rect)
+    
+    k = pygame.key.get_pressed()
+    for key in keys:
+        if k[key.key]:
+            pygame.draw.rect(screen,key.color1,key.rect)
+        if not k[key.key]:
+            pygame.draw.rect(screen,key.color2,key.rect)
+    for rect in map:
+        pygame.draw.rect(screen,(0,0,0),rect)
+
+
+    pygame.display.update()
